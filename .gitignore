@@ -1,0 +1,5 @@
+insert-*.sql
+*.zip
+run-data/
+__pycache__/
+.wrangler/
