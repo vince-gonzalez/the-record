@@ -5,3 +5,4 @@
 {"kind": "chain-head", "through_seq": 300655, "chain_head": "fb9bc8cf0c82bfb9f61e85e33243174e48b3821fdb4f4a51f8518d66576a5436", "anchored_at": "2026-08-27T07:37:47.607Z", "note": "automated in-run anchor"}
 {"kind": "chain-head", "through_seq": 400178, "chain_head": "d329402a721d3026a0d9ebe6a31027cb6cdfa698e30a8900a2492bf299f68f0d", "anchored_at": "2026-08-27T07:38:05.807Z", "note": "automated in-run anchor"}
 {"kind": "chain-head", "through_seq": 500921, "chain_head": "ba9273d7a8a81a2205b29a86c493c4eafed46e3f2cc158e5fb1d23dacbf326e6", "anchored_at": "2026-08-27T07:38:24.102Z", "note": "automated in-run anchor"}
+{"kind": "chain-head", "through_seq": 600534, "chain_head": "1d7cbbd8b9e131348f66366e0aa81b10f90aa224e64d0fb99b747ef120114a1c", "anchored_at": "2026-08-27T07:38:46.972Z", "note": "automated in-run anchor"}
