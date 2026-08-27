@@ -105,7 +105,7 @@ def address(jurisdiction_name_long, node_n, classified_at_iso):
 _ADDR_RE = re.compile(
     "^MGN·UNK·UNK·SR/NA/US(/[A-Z]{2})?"
     "·[0-9A-Z]{4}·:TXT·%AUT"
-    "·@\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z"
+    "·@\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z"
     "·§US(-[A-Z]{2})?·\\^PROV$"
 )
 
