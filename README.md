@@ -51,6 +51,22 @@ Harvard **Caselaw Access Project** static archive (`static.case.law`) —
 bulk-published, openly licensed public court records. Each row records the
 exact artifact URL and the SHA-256 of the exact bytes retrieved.
 
+## The million run — 2026-08-27
+
+Sequence 1,001 through 1,000,000 — 999,000 legal documents — addressed in
+one continuous chained run: **started 07:32:24.797 UTC, row 1,000,000 at
+07:40:39.361 UTC — 8 minutes 14.6 seconds**, including one mid-run crash
+(a Windows file lock at seq 113,563) and its recovery, both visible in the
+row timestamps. Chain heads were committed to this repository every
+100,000 rows *while the run was going*; GitHub's commit timestamps witness
+the pace independently.
+
+Full-chain audit: `verify_full.py` recomputes every hash from genesis —
+**1,000,000 rows VERIFIED, head
+`11644eb269e3940df5b8b2aa722bcf568ea19672c31100fba5df026635a791f1`** —
+19 jurisdictions, every row `^PROV`, every row carrying its source URL,
+the SHA-256 of its exact source bytes, and the spec hash.
+
 ## Infrastructure
 
 Cloudflare D1 database `the-record` (id `1b9e0cf6-403d-4e34-aa52-6c601f3f1e83`).
