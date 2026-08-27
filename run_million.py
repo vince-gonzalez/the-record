@@ -97,12 +97,30 @@ def volume_zips(rep):
     return sorted(set(int(v) for v in vols))
 
 
+def repair_shards(good_seq):
+    """Drop shard rows past the checkpoint. A crash between a shard flush
+    and a checkpoint save leaves orphan rows; resuming would fork the
+    chain into duplicate seq numbers with different hashes."""
+    import glob
+    for path in sorted(glob.glob(os.path.join(DATA, "ledger-*.jsonl"))):
+        lines = io.open(path, encoding="utf-8").readlines()
+        keep = [l for l in lines
+                if json.loads(l)["seq"] <= good_seq]
+        if len(keep) != len(lines):
+            io.open(path, "w", encoding="utf-8").writelines(keep)
+            print("repair: %s truncated %d orphan rows"
+                  % (os.path.basename(path), len(lines) - len(keep)),
+                  flush=True)
+
+
 def tail_state():
     """Resume point: checkpoint if present, else derived from the proof
     slice's committed ledger."""
     cp = os.path.join(DATA, "checkpoint.json")
     if os.path.isfile(cp):
-        return json.load(io.open(cp, encoding="utf-8"))
+        state = json.load(io.open(cp, encoding="utf-8"))
+        repair_shards(state["seq"])
+        return state
     seq, prev, counters = 0, hashlib.sha256(GENESIS.encode()).hexdigest(), {}
     slice_path = os.path.join(HERE, "ledger.jsonl")
     if os.path.isfile(slice_path):
@@ -118,9 +136,20 @@ def tail_state():
 
 
 def save_state(state):
+    # os.replace on Windows fails with WinError 5 while a scanner
+    # (Defender, indexer) briefly holds the target. Retry; the atomic
+    # swap is worth waiting a few seconds for. This exact failure killed
+    # a run at seq 113563.
     tmp = os.path.join(DATA, "checkpoint.tmp")
+    dst = os.path.join(DATA, "checkpoint.json")
     io.open(tmp, "w", encoding="utf-8").write(json.dumps(state))
-    os.replace(tmp, os.path.join(DATA, "checkpoint.json"))
+    for i in range(8):
+        try:
+            os.replace(tmp, dst)
+            return
+        except PermissionError:
+            time.sleep(0.5 * (i + 1))
+    os.replace(tmp, dst)
 
 
 def git_anchor(seq, head):
